@@ -1,9 +1,11 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import CountDown from "react-native-countdown-component";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function Overview() {
   return (
     <View style={styles.container}>
+
       {/* Event Title and Countdown */}
 
       <View style={styles.topcontainer}>
@@ -33,13 +35,10 @@ export default function Overview() {
       {/* Register Button and Price Increase Text */}
 
       <View style={styles.bottomcontainer}>
-        <Text style={{ color: "white", fontSize: 27, fontWeight: "bold" }}>
+        <Text style={{ color: "white", fontSize: 27, fontWeight: "bold", paddingBottom: 10 }}>
           Register
         </Text>
-        <Image
-          style={styles.image}
-          source={require("../assets/pricing-style-6.png")}
-        />
+        <FontAwesome5 name="ticket-alt" size={65} color="#00FFFF"/>
         <View style={{ width: 270 }}>
           <Text
             style={{
@@ -48,6 +47,7 @@ export default function Overview() {
               fontWeight: "semi-bold",
               lineHeight: 16,
               textAlign: "center",
+              paddingTop: 25,
             }}
           >
             Price increases to $15.00 on Feb 12, 2023, and again to $20.00 on
@@ -56,12 +56,14 @@ export default function Overview() {
         </View>
       </View>
       <Image
-        style={{ width: "100%" }}
+        style={styles.image}
         source={require("../assets/bottom-image.png")}
       />
     </View>
   );
 }
+
+const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,23 +72,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   topcontainer: {
-    flex: 2,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   midcontainer: {
-    flex: 2,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingBottom: 20,
   },
   bottomcontainer: {
-    flex: 2,
+    flex: 1,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "flex-start",
   },
   image: {
-    width: 197,
-    height: 71,
-    resizeMode: "contain",
+    flex: 0.28,
+    width: windowWidth,
   },
 });
