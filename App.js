@@ -1,56 +1,39 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { FontAwesome5 } from "@expo/vector-icons";
+import 'react-native-gesture-handler';
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Overview from "./components/Overview";
+import Speakers from './components/Speakers';
+import Sponsors from './components/Sponsors';
+import Schedule from './components/Schedule';
+import MyTimeline from './components/My-timeline';
+import CodeOfConduct from './components/Code-of-Conduct';
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-    <LinearGradient
-    // Background Linear Gradient
-    colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-    style={styles.container}
-  >
-
-      {/* Header */}
-
-      <View style={styles.header}>
-        <View style={{ padding: "7%" }}>
-          <FontAwesome5.Button
-            name="bars"
-            size={24}
-            color="white"
-            backgroundColor="transparent"
-          />
-        </View>
-        <Text
-          style={{
-            color: "white",
-            fontSize: 35,
-            fontWeight: "bold",
-            marginRight: "33%",
-          }}
-        >
-          Overview
-        </Text>
-      </View>
-      <Overview />
-    </LinearGradient>
+    <NavigationContainer theme={MyTheme}>
+        <Drawer.Navigator screenOptions={{headerTintColor: '#FFFFFF'}}>
+          <Drawer.Screen name="Overview" component={Overview} />
+          <Drawer.Screen name="Speakers" component={Speakers} />
+          <Drawer.Screen name="Sponsors" component={Sponsors} />
+          <Drawer.Screen name="Schedule" component={Schedule} />
+          <Drawer.Screen name="My Timeline" component={MyTimeline} />
+          <Drawer.Screen name="Code of Conduct" component={CodeOfConduct} />
+        </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    height: "15%",
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+const MyTheme = {
+  dark: true,
+  colors: {
+    primary: '#00FFFF',
+    background: "black",
+    card: 'black',
+    text: 'white',
+    border: 'black',
+    notification: '#00FFFF',
   },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+};

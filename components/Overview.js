@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import CountDown from "react-native-countdown-component";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Overview() {
   return (
-    <View style={styles.container}>
-
+    <LinearGradient
+      Background
+      Linear
+      Gradient
+      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
+      style={styles.container}
+    >
       {/* Event Title and Countdown */}
 
       <View style={styles.topcontainer}>
@@ -35,10 +41,19 @@ export default function Overview() {
       {/* Register Button and Price Increase Text */}
 
       <View style={styles.bottomcontainer}>
-        <Text style={{ color: "white", fontSize: 27, fontWeight: "bold", paddingBottom: 10 }}>
-          Register
-        </Text>
-        <FontAwesome5 name="ticket-alt" size={65} color="#00FFFF"/>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <FontAwesome5 name="ticket-alt" size={30} color="#00FFFF" />
+          <Text
+            style={{
+              color: "white",
+              fontSize: 27,
+              fontWeight: "bold",
+              padding: 10,
+            }}
+          >
+            Register
+          </Text>
+        </View>
         <View style={{ width: 270 }}>
           <Text
             style={{
@@ -59,7 +74,7 @@ export default function Overview() {
         style={styles.image}
         source={require("../assets/bottom-image.png")}
       />
-    </View>
+    </LinearGradient>
   );
 }
 
