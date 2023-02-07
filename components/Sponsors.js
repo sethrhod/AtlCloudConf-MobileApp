@@ -7,13 +7,18 @@ import {
   Image,
   StatusBar,
   Text,
+  TouchableHighlight,
+  Linking,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SubItem = (props) => (
-  <View style={styles.logo_container}>
-    <Image style={styles.logo} source={{ uri: props.sponsors.uri }} />
-  </View>
+  <TouchableHighlight onPress={() => Linking.openURL(props.sponsors.url)}>
+    <View style={styles.logo_container}>
+      <Image style={styles.logo} source={{ uri: props.sponsors.uri }} />
+    </View>
+  </TouchableHighlight>
 );
 
 const Item = (props) => (
