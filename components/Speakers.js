@@ -1,7 +1,8 @@
-import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linking } from "react-native";
+import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linking, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
+import AlphabetList from "react-native-flatlist-alphabet";
 
 const Item = (props) => (
   <View style={styles.item}>
@@ -12,14 +13,18 @@ const Item = (props) => (
 
     {/*Name and links*/}
 
-    <View style={{ alignItems: 'center' }}>
-      <Text style={styles.title}>{props.title}</Text>
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
-        {props.links.map((link) => 
+    <View style={{ maxWidth: 130, alignItems: 'center' }}>
+      <Text style={styles.name}>{props.fullName}</Text>
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {props.links.map((link, index) => 
           {var title = link.title;
+            // an if statement to catch the company website link and change the icon to a briefcase
+            {if (title == "Company Website") {title = "Briefcase"}}
             return (
-              <View style={{ justifyContent: 'center', padding: 5 }}>
-                <FontAwesome5 name={title.toLowerCase()} size={17} color="#0099CC" item_container/>
+              <View key={index} style={{ justifyContent: 'center', padding: 5 }}>
+                <TouchableOpacity onPress={() => Linking.openURL(link.url)}>
+                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#0099CC" item_container/>
+                </TouchableOpacity>
               </View>
           )}
         )}
@@ -29,7 +34,7 @@ const Item = (props) => (
     {/*bio*/}
 
     <View style={{ width: 120 }}>
-      <Text style={styles.bio}>{props.bio}</Text>
+      <Text style={styles.bio}>{props.tagLine}</Text>
     </View>
   </View>
 );
@@ -39,7 +44,7 @@ export default function Speakers() {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    fetch("https://sessionize.com/api/v2/jl4ktls0/view/Speakers")
+    fetch("https://sessionize.com/api/v2/curiktb3/view/Speakers")
     .then(response => response.json())
     .then(data => setData(data))
   }, [])
@@ -55,7 +60,7 @@ export default function Speakers() {
       <SafeAreaView style={styles.item_container}>
         <FlatList
           data={data}
-          renderItem={({ item }) => <Item title={item.fullName} uri={item.profilePicture} bio={item.bio} links={item.links} />}
+          renderItem={({ item }) => <Item fullName={item.fullName} uri={item.profilePicture} tagLine={item.tagLine} links={item.links} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{alignItems: 'stretch'}}
           style={{ width: '100%' }}
@@ -86,17 +91,18 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
   },
-  title: {
+  name: {
     fontSize: 20,
-    alignSelf: 'flex-start'
+    flexWrap: 'wrap',
+    textAlign: 'center',
   },
   bio: {
     fontSize: 12,
   },
   logo: {
-    width: 70,
-    height: 70,
-    borderRadius: 40,
+    width: 85,
+    height: 85,
+    borderRadius: 50,
   },
   link: {
     color: '#0099CC'

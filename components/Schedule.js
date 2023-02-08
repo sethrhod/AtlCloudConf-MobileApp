@@ -2,15 +2,14 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   FlatList,
   TouchableOpacity,
-  Platform
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
 function Timeblock(props) {
-  
   const [selected, setSelected] = useState(false);
 
   const onClick = () => {
@@ -22,7 +21,10 @@ function Timeblock(props) {
   var text_color = selected ? "black" : "white";
 
   return (
-    <TouchableOpacity style={[styles.timeblock, { backgroundColor: bg }]} onPressOut={() => onClick()}>
+    <TouchableOpacity
+      style={[styles.timeblock, { backgroundColor: bg }]}
+      onPressOut={() => onClick()}
+    >
       <Text style={[styles.timeblock_text, { color: text_color }]}>
         {props.time}
       </Text>
@@ -30,11 +32,19 @@ function Timeblock(props) {
   );
 }
 
-function Room(props) {
+function Session(props) {
   const [selected, setSelected] = useState(false);
 
   const onClick = () => {
     setSelected(!selected);
+  };
+
+  const getUri = (id) => {
+    for (var i = 0; i < props.speakerWall.length; i++) {
+      if (props.speakerWall[i].id == id) {
+        return props.speakerWall[i].profilePicture;
+      }
+    }
   };
 
   var bg = selected ? "#0099CC" : "#FFFFFF";
@@ -42,10 +52,34 @@ function Room(props) {
   var text_color = selected ? "white" : "black";
 
   return (
-    <TouchableOpacity style={[styles.room, { backgroundColor: bg }]} onPressOut={() => onClick()}>
-      <Text style={[styles.room_text, { color: text_color }]}>
-        {props.room}
+    <TouchableOpacity
+      style={[styles.room, { backgroundColor: bg }]}
+      onPressOut={() => onClick()}
+    >
+
+      {/* // session title */}
+
+      <Text style={[styles.title, { color: text_color, borderWidth: 1, borderColor: 'red' }]}>
+        {props.session.title}
       </Text>
+
+      {/* // loop through speakers ids and return their profile pics */}
+
+      <View style={{ flex: 1, flexDirection: "row", alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+        {props.session.speakers.map((speaker, index) => {
+          return (
+            <>
+              <Image
+                key={index}
+                style={styles.logo}
+                source={{ uri: getUri(speaker.id) }}
+              />
+              <Text style={styles.name}>{speaker.name}</Text>
+            </>
+          );
+        })}
+      </View>
+  
     </TouchableOpacity>
   );
 }
@@ -63,7 +97,25 @@ export default function Schedule() {
     "5:00 PM",
   ];
 
-  const rooms = ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5"];
+  const [sessions, setSessions] = useState([]);
+
+  useEffect(() => {
+    fetch("https://sessionize.com/api/v2/curiktb3/view/Sessions")
+      .then((response) => response.json())
+      .then((data) => {
+        setSessions(data[0].sessions);
+      });
+  }, []);
+
+  const [SpeakerWall, setSpeakerWall] = useState([]);
+
+  useEffect(() => {
+    fetch("https://sessionize.com/api/v2/curiktb3/view/SpeakerWall")
+      .then((response) => response.json())
+      .then((data) => {
+        setSpeakerWall(data);
+      });
+  }, [sessions]);
 
   return (
     <LinearGradient
@@ -78,16 +130,16 @@ export default function Schedule() {
         renderItem={({ item }) => <Timeblock time={item} />}
         horizontal={true}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ height: 100, padding: 10 }}
-        style={{ maxHeight: 100 }}
+        contentContainerStyle={{ minheight: 100, padding: 10 }}
+        style={{ height: 120 }}
       />
       <FlatList
-        data={rooms}
+        data={sessions}
         style={{ width: "100%" }}
         renderItem={({ item }) => (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.left_text}>{item}</Text>
-            <Room room={item} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={styles.left_text}>{item.room}</Text>
+            <Session session={item} speakerWall={SpeakerWall} />
           </View>
         )}
         keyExtractor={(item) => item.id}
@@ -110,7 +162,7 @@ const styles = StyleSheet.create({
   timeblock: {
     maxHeight: 60,
     margin: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 10,
     shadowColor: "#d2f7f7",
     shadowOffset: {
@@ -136,17 +188,27 @@ const styles = StyleSheet.create({
     width: "75%",
     height: 100,
     margin: 10,
-    alignItems: "center",
-    justifyContent: "center",
   },
-  room_text: {
-    color: "white",
-    fontSize: 20,
+  title: {
+    flex: 1,
+    fontSize: 15,
+    textAlign: "center",
+    fontWeight: "semi-bold",
+  },
+  name: {
+    fontSize: 12,
+    textAlign: "center",
   },
   left_text: {
     flex: 1,
     color: "white",
     fontSize: 20,
     textAlign: "center",
+  },
+  logo: {
+    width: 25,
+    height: 25,
+    borderRadius: 35,
+    margin: 5,
   },
 });
