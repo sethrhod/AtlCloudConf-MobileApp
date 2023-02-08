@@ -4,11 +4,13 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Platform
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
 function Timeblock(props) {
+  
   const [selected, setSelected] = useState(false);
 
   const onClick = () => {
@@ -75,15 +77,15 @@ export default function Schedule() {
         data={times}
         renderItem={({ item }) => <Timeblock time={item} />}
         horizontal={true}
-        contentContainerStyle={styles.timesarray}
-        style={{ width: "100%", height: 40, padding: 10 }}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ height: 100, padding: 10 }}
+        style={{ maxHeight: 100 }}
       />
       <FlatList
         data={rooms}
-        style={{ width: "100%", padding: 10 }}
+        style={{ width: "100%" }}
         renderItem={({ item }) => (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.left_text}>{item}</Text>
             <Room room={item} />
           </View>
@@ -101,15 +103,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   timeblock_text: {
+    padding: 10,
     color: "white",
     fontSize: 20,
   },
-  timesarray: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   timeblock: {
-    padding: 10,
+    maxHeight: 60,
+    margin: 10,
+    justifyContent: 'center',
     borderRadius: 10,
     shadowColor: "#d2f7f7",
     shadowOffset: {
@@ -119,11 +120,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 1,
     elevation: 5,
-    width: 70,
-    height: 80,
-    margin: 10,
-    alignItems: "center",
-    justifyContent: "center",
   },
   room: {
     flex: 3,
@@ -152,6 +148,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     textAlign: "center",
-    textAlignVertical: "center",
   },
 });
