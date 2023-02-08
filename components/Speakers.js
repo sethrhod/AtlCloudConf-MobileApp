@@ -2,7 +2,6 @@ import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linki
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import AlphabetList from "react-native-flatlist-alphabet";
 
 const Item = (props) => (
   <View style={styles.item}>

@@ -33,11 +33,6 @@ function Timeblock(props) {
 }
 
 function Session(props) {
-  const [selected, setSelected] = useState(false);
-
-  const onClick = () => {
-    setSelected(!selected);
-  };
 
   const getUri = (id) => {
     for (var i = 0; i < props.speakerWall.length; i++) {
@@ -47,8 +42,13 @@ function Session(props) {
     }
   };
 
-  var bg = selected ? "#0099CC" : "#FFFFFF";
+  const [selected, setSelected] = useState(false);
 
+  const onClick = () => {
+    setSelected(!selected);
+  };
+
+  var bg = selected ? "#0099CC" : "#FFFFFF";
   var text_color = selected ? "white" : "black";
 
   return (
@@ -59,13 +59,17 @@ function Session(props) {
 
       {/* // session title */}
 
-      <Text style={[styles.title, { color: text_color, borderWidth: 1, borderColor: 'red' }]}>
+      <Text style={[styles.title, { color: text_color }]}>
         {props.session.title}
       </Text>
 
+      {/* // session room */}
+
+      <Text style={styles.room_id}>{item.room}</Text>
+
       {/* // loop through speakers ids and return their profile pics */}
 
-      <View style={{ flex: 1, flexDirection: "row", alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+      <View style={{ flex: 1, flexDirection: "row", alignItems: 'center' }}>
         {props.session.speakers.map((speaker, index) => {
           return (
             <>
@@ -117,6 +121,37 @@ export default function Schedule() {
       });
   }, [sessions]);
 
+  const getNewHours = (item) => {
+    var date = item.startsAt;
+    const date_object = new Date(date);
+    var hours = date_object.getHours();
+    if (hours > 12) {
+      return hours - 12
+    } else {
+      return hours
+    }
+  };
+
+  const getNewMinutes = (item) => {
+    var date = item.startsAt;
+    const date_object = new Date(date);
+    var minutes = date_object.getMinutes();
+    if (minutes == 0) {
+      return "00"
+    } else {
+      return minutes
+    }
+  };
+
+  const Times = (props) => {
+    return (
+      <>
+        <Text style={styles.times}>starts at {String(getNewHours(props.start)) + ':' + String(getNewMinutes(props.start))}</Text>
+        <Text style={styles.times}>ends at {String(getNewHours(props.end)) + ':' + String(getNewMinutes(props.end))}</Text>
+      </>
+    )
+  };
+
   return (
     <LinearGradient
       Background
@@ -136,12 +171,12 @@ export default function Schedule() {
       <FlatList
         data={sessions}
         style={{ width: "100%" }}
-        renderItem={({ item }) => (
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.left_text}>{item.room}</Text>
+        renderItem={({ item }) =>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: 'center' }}>
+            <Times starts={item.startsAt} ends={item.endsAt}/>
             <Session session={item} speakerWall={SpeakerWall} />
           </View>
-        )}
+        }
         keyExtractor={(item) => item.id}
       />
     </LinearGradient>
@@ -193,22 +228,26 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     textAlign: "center",
-    fontWeight: "semi-bold",
+    fontWeight: "bold",
   },
   name: {
     fontSize: 12,
     textAlign: "center",
   },
-  left_text: {
+  room_id: {
     flex: 1,
     color: "white",
-    fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
+    fontSize: 15,
+    marginLeft: 8,
   },
   logo: {
     width: 25,
     height: 25,
     borderRadius: 35,
     margin: 5,
+  },
+  times: {
+    textAlign: 'center'
   },
 });
