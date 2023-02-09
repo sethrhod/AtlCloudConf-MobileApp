@@ -1,7 +1,8 @@
 import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linking, TouchableOpacity } from "react-native";
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { SessionizeContext } from "../App.js";
 
 const Item = (props) => (
   <View style={styles.item}>
@@ -40,13 +41,7 @@ const Item = (props) => (
 
 export default function Speakers() {
 
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    fetch("https://sessionize.com/api/v2/curiktb3/view/Speakers")
-    .then(response => response.json())
-    .then(data => setData(data))
-  }, [])
+  const {speakers} = useContext(SessionizeContext);
 
   return (
     <LinearGradient
@@ -58,7 +53,7 @@ export default function Speakers() {
     >
       <SafeAreaView style={styles.item_container}>
         <FlatList
-          data={data}
+          data={speakers}
           renderItem={({ item }) => <Item fullName={item.fullName} uri={item.profilePicture} tagLine={item.tagLine} links={item.links} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{alignItems: 'stretch'}}
