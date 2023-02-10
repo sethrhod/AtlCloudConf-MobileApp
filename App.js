@@ -15,7 +15,6 @@ const Drawer = createDrawerNavigator();
 export const SessionizeContext = createContext([]);
 
 export default function App() {
-
   const [speakers, setSpeakers] = useState(null);
   const [sessions, setSessions] = useState(null);
 
@@ -23,21 +22,21 @@ export default function App() {
     fetch("https://sessionize.com/api/v2/curiktb3/view/Speakers")
       .then((response) => response.json())
       .then((data) => {
-        let newSpeakers = [];
+        let all_speakers = [];
         data.map((speaker) => {
           let classinstance = new Speaker(speaker);
-          newSpeakers.push(classinstance);
-          setSpeakers(newSpeakers);
-          fetchSessions(newSpeakers);
+          all_speakers.push(classinstance);
         });
+        setSpeakers(all_speakers);
+        fetchSessions(all_speakers);
       });
   }, []);
 
-  const fetchSessions = (speakers) => {
+  const fetchSessions = (all_speakers) => {
     fetch("https://sessionize.com/api/v2/curiktb3/view/Sessions")
       .then((response) => response.json())
       .then((data) => {
-        let classinstance = new Sessions(data[0], speakers);
+        let classinstance = new Sessions(data[0], all_speakers);
         setSessions(classinstance);
       });
   };

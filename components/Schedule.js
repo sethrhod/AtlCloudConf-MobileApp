@@ -11,29 +11,6 @@ import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { SessionizeContext } from "../App.js";
 
-// function Timeblock(props) {
-//   const [selected, setSelected] = useState(false);
-
-//   const onClick = () => {
-//     setSelected(!selected);
-//   };
-
-//   var bg = selected ? "#0099CC" : "#000000";
-
-//   var text_color = selected ? "black" : "white";
-
-//   return (
-//     <TouchableOpacity
-//       style={[styles.timeblock, { backgroundColor: bg }]}
-//       onPressOut={() => onClick()}
-//     >
-//       <Text style={[styles.timeblock_text, { color: text_color }]}>
-//         {props.time}
-//       </Text>
-//     </TouchableOpacity>
-//   );
-// }
-
 function Session(props) {
   const [selected, setSelected] = useState(false);
 
@@ -44,6 +21,23 @@ function Session(props) {
   var bg = selected ? "#0099CC" : "#FFFFFF";
   var text_color = selected ? "white" : "black";
 
+  const speakers = props.session.speakers.map((speaker, index) => (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      <Image
+        key={index}
+        style={styles.logo}
+        source={{ uri: speaker.profilePicture }}
+      />
+      <Text style={styles.name}>{speaker.fullName}</Text>
+    </View>
+  ));
+
   return (
     <TouchableOpacity
       style={[styles.session, { backgroundColor: bg }]}
@@ -51,46 +45,84 @@ function Session(props) {
     >
       {/* // session title */}
 
-      <Text style={[styles.title, { color: text_color }]}>{props.title}</Text>
-
-      {/* // session room */}
-
-      <Text style={styles.room}>{props.room}</Text>
-
-      {/* // loop through speakers ids and return their profile pics */}
+      <Text style={[styles.title, { color: text_color }]}>
+        {props.session.title}
+      </Text>
 
       <View
         style={{
+          flex: 1,
+          width: "100%",
           flexDirection: "row",
-          alignItems: "center",
-          alignSelf: "flex-start",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
         }}
       >
         {/* // check if there are speakers */}
-        {props.speakers.length > 0 &&
-          props.speakers.map((speaker, index) => {
-            return (
-              <>
-                <Image
-                  key={index}
-                  style={styles.logo}
-                  source={{ uri: speaker.profilePicture }}
-                />
-                <Text style={styles.name}>{speaker.name}</Text>
-              </>
-            );
-          })}
+        {props.session.speakers.length > 0 ? (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {/* // loop through speakers ids and return their profile pics */}
+            {speakers}
+
+            {/* // session room */}
+            <Text style={[styles.speaker_room, { color: text_color }]}>
+              {props.session.room}
+            </Text>
+          </View>
+        ) : (
+          // main-event session room
+          <View
+            style={{
+              flex: 1,
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={[styles.main_room, { color: text_color }]}>
+              {props.session.room}
+            </Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
 }
 
 export default function Schedule() {
+  const sectionListRef = React.useRef(null);
+
   const { sessions } = useContext(SessionizeContext);
 
-  const getNewHours = (item) => {
-    const date_object = new Date(item);
+  const getNewTime = (time) => {
+    const date_object = new Date(time);
     var hours = date_object.getHours();
+    var minutes = date_object.getMinutes();
+    var newTime =
+      String(getNewHours(hours)) +
+      ":" +
+      String(getNewMinutes(minutes)) +
+      " " +
+      String(getAmPm(hours));
+    return newTime;
+  };
+
+  const getAmPm = (hours) => {
+    if (hours > 12) {
+      return "PM";
+    } else {
+      return "AM";
+    }
+  };
+
+  const getNewHours = (hours) => {
     if (hours > 12) {
       return hours - 12;
     } else {
@@ -98,9 +130,7 @@ export default function Schedule() {
     }
   };
 
-  const getNewMinutes = (item) => {
-    const date_object = new Date(item);
-    var minutes = date_object.getMinutes();
+  const getNewMinutes = (minutes) => {
     if (minutes == 0) {
       return "00";
     } else {
@@ -111,19 +141,53 @@ export default function Schedule() {
   const Times = (props) => {
     return (
       <View style={{ margin: 10, flex: 0.15 }}>
-        <Text style={styles.times}>
-          {String(getNewHours(props.starts)) +
-            ":" +
-            String(getNewMinutes(props.starts))}
-        </Text>
+        <Text style={styles.times}>{getNewTime(props.starts)}</Text>
         <Text style={styles.times}>-</Text>
-        <Text style={styles.times}>
-          {String(getNewHours(props.ends)) +
-            ":" +
-            String(getNewMinutes(props.ends))}
-        </Text>
+        <Text style={styles.times}>{getNewTime(props.ends)}</Text>
       </View>
     );
+  };
+
+  // a function that costructs a list of session data thats compatible with the SectionList component
+  const constructSectionListData = (sessions) => {
+    // create an empty array to store the data
+    let data = [];
+
+    // loop through the sessions
+    sessions.start_times.forEach((time) => {
+      // create an empty object to store the data
+      let obj = {};
+      // set the title of the object to the start time of the session and add to the same hour sessions
+      obj.title = getNewTime(time);
+      // set the data of the object to the sessions that start at the same time
+      obj.data = sessions.sessions.filter(
+        (session) => session.startsAt == time
+      );
+      // push the object to the data array
+      data.push(obj);
+    });
+    // return the data array
+    return data;
+  };
+
+  const TimeScroll = (sectionListData) => {
+    return sectionListData.map((time, index) => (
+      <View style={styles.time_scroll}>
+        <TouchableOpacity
+          onPress={() => {
+            sectionListRef.current.scrollToLocation({
+              animated: true,
+              itemIndex: 0,
+              sectionIndex: index,
+              viewOffset: 0,
+              viewPosition: 0,
+            });
+          }}
+        >
+          <Text style={styles.time_scroll_text}>{time.title}</Text>
+        </TouchableOpacity>
+      </View>
+    ));
   };
 
   return (
@@ -134,17 +198,26 @@ export default function Schedule() {
       colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
       style={styles.container}
     >
-      <FlatList
-        data={sessions}
-        style={{ width: "100%" }}
+      <SectionList
+        sections={constructSectionListData(sessions)}
+        ref={sectionListRef}
+        style={{ width: "100%", flex: 1 }}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.list_item}>
             <Times starts={item.startsAt} ends={item.endsAt} />
             <Session session={item} />
           </View>
         )}
-        keyExtractor={(item) => item.id}
+        renderSectionHeader={({ section: { title } }) => (
+          <View style={styles.timeblock}>
+            <Text style={styles.timeblock_text}>{title}</Text>
+          </View>
+        )}
       />
+      <View style={styles.time_scroll_container}>
+        {TimeScroll(constructSectionListData(sessions))}
+      </View>
     </LinearGradient>
   );
 }
@@ -152,8 +225,7 @@ export default function Schedule() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "row",
   },
   timeblock_text: {
     padding: 10,
@@ -161,6 +233,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   timeblock: {
+    backgroundColor: "#0f4c5c",
+    alignItems: "center",
     maxHeight: 60,
     margin: 10,
     justifyContent: "center",
@@ -198,11 +272,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
   },
-  room: {
+  speaker_room: {
     color: "black",
     textAlign: "center",
     fontSize: 15,
-    marginLeft: 8,
+    fontWeight: "semi-bold",
   },
   logo: {
     width: 25,
@@ -213,5 +287,41 @@ const styles = StyleSheet.create({
   times: {
     textAlign: "center",
     color: "white",
+  },
+  time_scroll: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  time_scroll_button: {
+    backgroundColor: "#0f4c5c",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    shadowColor: "#d2f7f7",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 1,
+    elevation: 5,
+    margin: 5,
+    padding: 5,
+  },
+  time_scroll_container: {
+    flex: 0.1,
+    margin: 10,
+    borderRadius: 50,
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255,0.2)",
+  },
+  time_scroll_text: {
+    color: "white",
+    fontSize: 10,
+    textAlign: "center",
   },
 });
