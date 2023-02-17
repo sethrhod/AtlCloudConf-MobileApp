@@ -2,117 +2,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  FlatList,
   SectionList,
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { SessionizeContext } from "../App.js";
+import Session from "./Session.js";
 
-function Session(props) {
-  const [selected, setSelected] = useState(false);
-
-  const onClick = () => {
-    setSelected(!selected);
-  };
-
-  var bg = selected ? "#0099CC" : "#FFFFFF";
-  var text_color = selected ? "white" : "black";
-
-  const speakers = props.session.speakers.map((speaker, index) => (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <Image
-        key={index}
-        style={styles.logo}
-        source={{ uri: speaker.profilePicture }}
-      />
-      <Text style={styles.name}>{speaker.fullName}</Text>
-    </View>
-  ));
-
-  return (
-    <TouchableOpacity
-      style={[styles.session, { backgroundColor: bg }]}
-      onPressOut={() => onClick()}
-    >
-      {/* // session title */}
-
-      <Text style={[styles.title, { color: text_color }]}>
-        {props.session.title}
-      </Text>
-
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-        }}
-      >
-        {/* // check if there are speakers */}
-        {props.session.speakers.length > 0 ? (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {/* // loop through speakers ids and return their profile pics */}
-            {speakers}
-
-            {/* // session room */}
-            <Text style={[styles.speaker_room, { color: text_color }]}>
-              {props.session.room}
-            </Text>
-          </View>
-        ) : (
-          // main-event session room
-          <View
-            style={{
-              flex: 1,
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={[styles.main_room, { color: text_color }]}>
-              {props.session.room}
-            </Text>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-export default function Schedule() {
-  const sectionListRef = React.useRef(null);
-
-  const { sessions } = useContext(SessionizeContext);
-
-  const getNewTime = (time) => {
-    const date_object = new Date(time);
-    var hours = date_object.getHours();
-    var minutes = date_object.getMinutes();
-    var newTime =
-      String(getNewHours(hours)) +
-      ":" +
-      String(getNewMinutes(minutes)) +
-      " " +
-      String(getAmPm(hours));
-    return newTime;
-  };
+export function getNewTime(time) {
 
   const getAmPm = (hours) => {
     if (hours > 12) {
@@ -121,7 +19,7 @@ export default function Schedule() {
       return "AM";
     }
   };
-
+  
   const getNewHours = (hours) => {
     if (hours > 12) {
       return hours - 12;
@@ -129,7 +27,7 @@ export default function Schedule() {
       return hours;
     }
   };
-
+  
   const getNewMinutes = (minutes) => {
     if (minutes == 0) {
       return "00";
@@ -138,15 +36,23 @@ export default function Schedule() {
     }
   };
 
-  const Times = (props) => {
-    return (
-      <View style={{ margin: 10, flex: 0.15 }}>
-        <Text style={styles.times}>{getNewTime(props.starts)}</Text>
-        <Text style={styles.times}>-</Text>
-        <Text style={styles.times}>{getNewTime(props.ends)}</Text>
-      </View>
-    );
-  };
+  const date_object = new Date(time);
+  var hours = date_object.getHours();
+  var minutes = date_object.getMinutes();
+  var newTime =
+    String(getNewHours(hours)) +
+    ":" +
+    String(getNewMinutes(minutes)) +
+    " " +
+    String(getAmPm(hours));
+  return newTime;
+};
+
+export default function Schedule() {
+
+  const sectionListRef = React.useRef(null);
+
+  const {sessions} = useContext(SessionizeContext);
 
   // a function that costructs a list of session data thats compatible with the SectionList component
   const constructSectionListData = (sessions) => {
@@ -201,13 +107,15 @@ export default function Schedule() {
       <SectionList
         sections={constructSectionListData(sessions)}
         ref={sectionListRef}
-        style={{ width: "100%", flex: 1 }}
+        style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 50 }}
         renderItem={({ item }) => (
-          <View style={styles.list_item}>
-            <Times starts={item.startsAt} ends={item.endsAt} />
-            <Session session={item} />
-          </View>
+          <Session
+            session={item}
+            starts={getNewTime(item.startsAt)}
+            ends={getNewTime(item.endsAt)}
+          />
         )}
         renderSectionHeader={({ section: { title } }) => (
           <View style={styles.timeblock}>
@@ -239,19 +147,6 @@ const styles = StyleSheet.create({
     margin: 10,
     justifyContent: "center",
     borderRadius: 10,
-    shadowColor: "#d2f7f7",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
-    elevation: 5,
-  },
-  list_item: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
   session: {
     flex: 1,
@@ -259,8 +154,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     borderRadius: 10,
-    width: "75%",
-    height: 100,
     margin: 10,
   },
   title: {
@@ -286,7 +179,7 @@ const styles = StyleSheet.create({
   },
   times: {
     textAlign: "center",
-    color: "white",
+    fontSize: 12,
   },
   time_scroll: {
     flex: 1,
@@ -294,29 +187,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  time_scroll_button: {
-    backgroundColor: "#0f4c5c",
+  time_scroll_container: {
+    borderRadius: 30,
+    maxWidth: 30,
+    margin: 10,
+    marginLeft: 0,
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    shadowColor: "#d2f7f7",
+    backgroundColor: "black",
+    shadowColor: "white",
     shadowOffset: {
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
+    shadowOpacity: 0.9,
+    shadowRadius: 10,
     elevation: 5,
-    margin: 5,
-    padding: 5,
-  },
-  time_scroll_container: {
-    flex: 0.1,
-    margin: 10,
-    borderRadius: 50,
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "rgba(255, 255, 255,0.2)",
   },
   time_scroll_text: {
