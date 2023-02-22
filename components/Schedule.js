@@ -7,8 +7,100 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { SessionizeContext } from "../App.js";
+import SessionizeContext from "../SessionizeContext.js";
 import Session from "./Session.js";
+
+export default function Schedule() {
+
+  const sectionListRef = React.useRef(null);
+
+  const {sessions} = useContext(SessionizeContext);
+  const {bookmarks} = useContext(SessionizeContext);
+
+  // a function that costructs a list of session data thats compatible with the SectionList component
+  const constructSectionListData = (sessions) => {
+    // create an empty array to store the data
+    let data = [];
+
+    // loop through the sessions
+    sessions.start_times.forEach((time) => {
+      // create an empty object to store the data
+      let obj = {};
+      // set the title of the object to the start time of the session and add to the same hour sessions
+      obj.title = getNewTime(time);
+      // set the data of the object to the sessions that start at the same time
+      obj.data = sessions.sessions.filter(
+        (session) => session.startsAt == time
+      );
+      // check the ids of the sessions in the data array and compare them to the ids of the sessions in the bookmarks array
+      // if the ids match, change the bookmarked state of the session to true
+      obj.data.forEach((session) => {
+        bookmarks.forEach((bookmark) => {
+          if (session.id === bookmark.id) {
+            session.bookmarked = true;
+          }
+        });
+      });
+      // push the object to the data array
+      data.push(obj);
+    });
+    // return the data array
+    return data;
+  };
+
+  return (
+    <LinearGradient
+      Background
+      Linear
+      Gradient
+      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
+      style={styles.container}
+    >
+      <SectionList
+        sections={constructSectionListData(sessions)}
+        ref={sectionListRef}
+        style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 50 }}
+        renderItem={({ item }) => (
+          <Session
+            session={item}
+            starts={getNewTime(item.startsAt)}
+            ends={getNewTime(item.endsAt)}
+          />
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <View style={styles.timeblock}>
+            <Text style={styles.timeblock_text}>{title}</Text>
+          </View>
+        )}
+      />
+      <View style={styles.time_scroll_container}>
+        <TimeScroll sectionListData={constructSectionListData(sessions)} sectionListRef={sectionListRef} />
+      </View>
+    </LinearGradient>
+  );
+}
+
+function TimeScroll(props) {
+  return props.sectionListData.map((time, index) => (
+    <View style={styles.time_scroll}>
+      <TouchableOpacity
+        onPress={() => {
+          props.sectionListRef.current.scrollToLocation({
+            animated: true,
+            itemIndex: 0,
+            sectionIndex: index,
+            viewOffset: 0,
+            viewPosition: 0,
+          });
+        }}
+      >
+        <Text style={styles.time_scroll_text}>{time.title}</Text>
+      </TouchableOpacity>
+    </View>
+  ));
+};
 
 export function getNewTime(time) {
 
@@ -47,88 +139,6 @@ export function getNewTime(time) {
     String(getAmPm(hours));
   return newTime;
 };
-
-export default function Schedule() {
-
-  const sectionListRef = React.useRef(null);
-
-  const {sessions} = useContext(SessionizeContext);
-
-  // a function that costructs a list of session data thats compatible with the SectionList component
-  const constructSectionListData = (sessions) => {
-    // create an empty array to store the data
-    let data = [];
-
-    // loop through the sessions
-    sessions.start_times.forEach((time) => {
-      // create an empty object to store the data
-      let obj = {};
-      // set the title of the object to the start time of the session and add to the same hour sessions
-      obj.title = getNewTime(time);
-      // set the data of the object to the sessions that start at the same time
-      obj.data = sessions.sessions.filter(
-        (session) => session.startsAt == time
-      );
-      // push the object to the data array
-      data.push(obj);
-    });
-    // return the data array
-    return data;
-  };
-
-  const TimeScroll = (sectionListData) => {
-    return sectionListData.map((time, index) => (
-      <View style={styles.time_scroll}>
-        <TouchableOpacity
-          onPress={() => {
-            sectionListRef.current.scrollToLocation({
-              animated: true,
-              itemIndex: 0,
-              sectionIndex: index,
-              viewOffset: 0,
-              viewPosition: 0,
-            });
-          }}
-        >
-          <Text style={styles.time_scroll_text}>{time.title}</Text>
-        </TouchableOpacity>
-      </View>
-    ));
-  };
-
-  return (
-    <LinearGradient
-      Background
-      Linear
-      Gradient
-      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-      style={styles.container}
-    >
-      <SectionList
-        sections={constructSectionListData(sessions)}
-        ref={sectionListRef}
-        style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 50 }}
-        renderItem={({ item }) => (
-          <Session
-            session={item}
-            starts={getNewTime(item.startsAt)}
-            ends={getNewTime(item.endsAt)}
-          />
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <View style={styles.timeblock}>
-            <Text style={styles.timeblock_text}>{title}</Text>
-          </View>
-        )}
-      />
-      <View style={styles.time_scroll_container}>
-        {TimeScroll(constructSectionListData(sessions))}
-      </View>
-    </LinearGradient>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {

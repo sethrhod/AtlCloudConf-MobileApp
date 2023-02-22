@@ -2,7 +2,7 @@ import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linki
 import React, { useContext } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { SessionizeContext } from "../App.js";
+import SessionizeContext from "../SessionizeContext";
 
 const Item = (props) => (
   <View style={styles.item}>
