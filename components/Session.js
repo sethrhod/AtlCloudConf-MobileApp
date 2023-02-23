@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import SessionizeContext from "../SessionizeContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -88,6 +88,13 @@ export default function Session(props) {
     }
   };
 
+  // close swipeable ref when component renders
+  useEffect(() => {
+    if (SwipeableRef.current) {
+      SwipeableRef.current.close();
+    }
+  }, []);
+
   const LeftSwipeActions = () => {
     return (
       <Pressable
@@ -95,7 +102,7 @@ export default function Session(props) {
           flex: 1,
           flexDirection: "row",
           borderRadius: 10,
-          backgroundColor: "#0099CC",
+          backgroundColor: "#C0D6DF",
           margin: 10,
           padding: 10,
         }}
@@ -120,7 +127,7 @@ export default function Session(props) {
     );
   };
 
-  var bg = props.session.bookmarked ? "#0099CC" : "white";
+  var bg = props.session.bookmarked ? "#00F2F2" : "#DBE9EE";
 
   return (
     <Swipeable
@@ -226,16 +233,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
+    color: '#166088'
   },
   name: {
     fontSize: 12,
     textAlign: "center",
+    color: "#166088",
   },
   speaker_room: {
-    color: "black",
+    color: "#166088",
     textAlign: "center",
     fontSize: 15,
     fontWeight: "semi-bold",
+  },
+  main_room: {
+    color: "#166088",
   },
   logo: {
     width: 25,
@@ -246,6 +258,7 @@ const styles = StyleSheet.create({
   times: {
     textAlign: "center",
     fontSize: 12,
+    color: "#166088",
   },
   time_scroll: {
     flex: 1,

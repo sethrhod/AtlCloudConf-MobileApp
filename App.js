@@ -123,7 +123,7 @@ export default function App() {
   return (
     <SessionizeContext.Provider value={value}>
       <NavigationContainer theme={MyTheme}>
-        <Drawer.Navigator screenOptions={{ headerTintColor: "#FFFFFF" }}>
+        <Drawer.Navigator screenOptions={{ headerTintColor: "#DBE9EE" }}>
           <Drawer.Screen name="Overview" component={Overview} />
           <Drawer.Screen name="Speakers" component={Speakers} />
           <Drawer.Screen name="Sponsors" component={Sponsors} />
@@ -139,11 +139,11 @@ export default function App() {
 const MyTheme = {
   dark: true,
   colors: {
-    primary: "#00FFFF",
-    background: "black",
-    card: "black",
+    primary: "#DBE9EE",
+    background: "#FFEAEE",
+    card: "#166088",
     text: "white",
-    border: "black",
+    border: "#096B72",
     notification: "#00FFFF",
   },
 };

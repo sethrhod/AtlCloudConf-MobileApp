@@ -9,7 +9,7 @@ export default function Overview() {
       Background
       Linear
       Gradient
-      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
+      colors={["rgba(0,0,0,1)", "rgb(0, 117, 242, 1)"]}
       style={styles.container}
     >
       {/* Event Title and Countdown */}
@@ -25,7 +25,7 @@ export default function Overview() {
           until={100000}
           size={30}
           digitStyle={{ backgroundColor: "transparent" }}
-          digitTxtStyle={{ color: "#00FFFF" }}
+          digitTxtStyle={{ color: "#00F2F2" }}
           timeToShow={["D", "H", "M", "S"]}
           timeLabels={{ d: "Days", h: "Hours", m: "Minutes", s: "Seconds" }}
           timeLabelStyle={{ color: "grey" }}

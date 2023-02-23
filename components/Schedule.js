@@ -4,6 +4,7 @@ import {
   View,
   SectionList,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -11,11 +12,19 @@ import SessionizeContext from "../SessionizeContext.js";
 import Session from "./Session.js";
 
 export default function Schedule() {
-
   const sectionListRef = React.useRef(null);
 
-  const {sessions} = useContext(SessionizeContext);
-  const {bookmarks} = useContext(SessionizeContext);
+  const { sessions } = useContext(SessionizeContext);
+  const { bookmarks } = useContext(SessionizeContext);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // a function that costructs a list of session data thats compatible with the SectionList component
   const constructSectionListData = (sessions) => {
@@ -32,14 +41,18 @@ export default function Schedule() {
       obj.data = sessions.sessions.filter(
         (session) => session.startsAt == time
       );
-      // check the ids of the sessions in the data array and compare them to the ids of the sessions in the bookmarks array
-      // if the ids match, change the bookmarked state of the session to true
       obj.data.forEach((session) => {
-        bookmarks.forEach((bookmark) => {
-          if (session.id === bookmark.id) {
-            session.bookmarked = true;
-          }
-        });
+        //check if bookmarks array is empty and if it is, set the bookmarked state to false
+        if (bookmarks.length === 0) {
+          session.bookmarked = false;
+        } else {
+          // compare ids in sessions and bookmarks array, if id exists in both, set bookmarked state of the session to true
+          bookmarks.forEach((bookmark) => {
+            if (session.id === bookmark.id) {
+              session.bookmarked = true;
+            }
+          });
+        }
       });
       // push the object to the data array
       data.push(obj);
@@ -53,12 +66,15 @@ export default function Schedule() {
       Background
       Linear
       Gradient
-      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
+      colors={["#166088", "#166088"]}
       style={styles.container}
     >
       <SectionList
         sections={constructSectionListData(sessions)}
         ref={sectionListRef}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 50 }}
@@ -76,7 +92,10 @@ export default function Schedule() {
         )}
       />
       <View style={styles.time_scroll_container}>
-        <TimeScroll sectionListData={constructSectionListData(sessions)} sectionListRef={sectionListRef} />
+        <TimeScroll
+          sectionListData={constructSectionListData(sessions)}
+          sectionListRef={sectionListRef}
+        />
       </View>
     </LinearGradient>
   );
@@ -100,10 +119,9 @@ function TimeScroll(props) {
       </TouchableOpacity>
     </View>
   ));
-};
+}
 
 export function getNewTime(time) {
-
   const getAmPm = (hours) => {
     if (hours > 12) {
       return "PM";
@@ -111,7 +129,7 @@ export function getNewTime(time) {
       return "AM";
     }
   };
-  
+
   const getNewHours = (hours) => {
     if (hours > 12) {
       return hours - 12;
@@ -119,7 +137,7 @@ export function getNewTime(time) {
       return hours;
     }
   };
-  
+
   const getNewMinutes = (minutes) => {
     if (minutes == 0) {
       return "00";
@@ -138,7 +156,7 @@ export function getNewTime(time) {
     " " +
     String(getAmPm(hours));
   return newTime;
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -151,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   timeblock: {
-    backgroundColor: "#0f4c5c",
+    backgroundColor: "#4F6D7A",
     alignItems: "center",
     maxHeight: 60,
     margin: 10,

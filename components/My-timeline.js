@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { SectionList, View, Image, Pressable, Button } from "react-native";
+import { SectionList, View, Image, Pressable, Button, RefreshControl } from "react-native";
 import { StyleSheet, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import SessionizeContext from "../SessionizeContext.js";
@@ -13,6 +13,15 @@ export default function MyTimeline() {
   const { sessions } = useContext(SessionizeContext);
 
   const sectionListRef = React.useRef(null);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // a function that costructs a list of session data thats compatible with the SectionList component
   const constructSectionListData = (bookmarks) => {
@@ -83,6 +92,9 @@ export default function MyTimeline() {
           style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 50 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={({ item }) => (
             <View style={styles.list_item}>
               <Session

@@ -23,7 +23,7 @@ const Item = (props) => (
             return (
               <View key={index} style={{ justifyContent: 'center', padding: 5 }}>
                 <TouchableOpacity onPress={() => Linking.openURL(link.url)}>
-                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#0099CC" item_container/>
+                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#7F675B" item_container/>
                 </TouchableOpacity>
               </View>
           )}
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 15,
     width: '90%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFEAEE',
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -89,9 +89,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flexWrap: 'wrap',
     textAlign: 'center',
+    color: '#7F675B'
   },
   bio: {
     fontSize: 12,
+    color: '#7F675B'
   },
   logo: {
     width: 85,
