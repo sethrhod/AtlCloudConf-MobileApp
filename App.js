@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { NavigationContainer } from "@react-navigation/native";
@@ -140,7 +140,7 @@ const MyTheme = {
   dark: true,
   colors: {
     primary: "#DBE9EE",
-    background: "#FFEAEE",
+    background: "#166088",
     card: "#166088",
     text: "white",
     border: "#096B72",

@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { SectionList, View, Image, Pressable, Button, RefreshControl } from "react-native";
+import React, { useContext } from "react";
+import { SectionList, View, Button, RefreshControl, SafeAreaView } from "react-native";
 import { StyleSheet, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import SessionizeContext from "../SessionizeContext.js";
 import { getNewTime } from "./Schedule.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -63,33 +62,19 @@ export default function MyTimeline() {
 
   const conditionalRender =
     bookmarks.length === 0 ? (
-      <LinearGradient
-        Background
-        Linear
-        Gradient
-        colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-        style={styles.container}
-      >
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ color: "white", fontSize: 40, textAlign: "center" }}>
-            No Sessions
-          </Text>
-        </View>
-      </LinearGradient>
+      <View style={{ flex: 0.8, justifyContent: "center" }}>
+        <Text style={{ color: "white", fontSize: 40, textAlign: "center" }}>
+          No Sessions Added
+        </Text>
+      </View>
     ) : (
-      <LinearGradient
-        Background
-        Linear
-        Gradient
-        colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-        style={styles.container}
-      >
+      <SafeAreaView style={styles.container}>
         <Button title="Clear My Timeline" onPress={() => clearAll()} />
 
         <SectionList
           sections={constructSectionListData(bookmarks)}
           ref={sectionListRef}
-          style={{ height: "100%", flex: 1, margin: 10, marginRight: 0 }}
+          style={{ height: "100%", flex: 1, margin: 10 }}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 50 }}
           refreshControl={
@@ -110,7 +95,7 @@ export default function MyTimeline() {
             </View>
           )}
         />
-      </LinearGradient>
+      </SafeAreaView>
     );
 
   return conditionalRender;

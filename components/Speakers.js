@@ -1,6 +1,5 @@
 import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linking, TouchableOpacity } from "react-native";
 import React, { useContext } from 'react';
-import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import SessionizeContext from "../SessionizeContext";
 
@@ -23,7 +22,7 @@ const Item = (props) => (
             return (
               <View key={index} style={{ justifyContent: 'center', padding: 5 }}>
                 <TouchableOpacity onPress={() => Linking.openURL(link.url)}>
-                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#7F675B" item_container/>
+                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#166088" item_container/>
                 </TouchableOpacity>
               </View>
           )}
@@ -44,13 +43,7 @@ export default function Speakers() {
   const {speakers} = useContext(SessionizeContext);
 
   return (
-    <LinearGradient
-      Background
-      Linear
-      Gradient
-      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <SafeAreaView style={styles.item_container}>
         <FlatList
           data={speakers}
@@ -60,7 +53,7 @@ export default function Speakers() {
           style={{ width: '100%' }}
         />
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -80,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 15,
     width: '90%',
-    backgroundColor: '#FFEAEE',
+    backgroundColor: '#DBE9EE',
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -89,11 +82,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flexWrap: 'wrap',
     textAlign: 'center',
-    color: '#7F675B'
+    color: '#166088'
   },
   bio: {
     fontSize: 12,
-    color: '#7F675B'
+    color: '#166088'
   },
   logo: {
     width: 85,
@@ -101,7 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   link: {
-    color: '#0099CC'
+    color: '#166088'
   }
 });
 

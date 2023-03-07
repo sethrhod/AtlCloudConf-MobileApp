@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import SessionizeContext from "../SessionizeContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -111,7 +111,7 @@ export default function Session(props) {
         <Text
           style={{
             flex: 1,
-            color: "#40394a",
+            color: "#4A6FA5",
             fontWeight: "600",
             fontSize: 25,
           }}
@@ -119,9 +119,9 @@ export default function Session(props) {
           Add to Timeline
         </Text>
         {props.session.bookmarked ? (
-          <Icon name="bookmark" color={"#40394a"} size={30} solid />
+          <Icon name="bookmark" color={"#4A6FA5"} size={30} solid />
         ) : (
-          <Icon name="bookmark" color={"#40394a"} size={30} />
+          <Icon name="bookmark" color={"#4A6FA5"} size={30} />
         )}
       </Pressable>
     );
@@ -208,19 +208,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
   },
-  timeblock_text: {
-    padding: 10,
-    color: "white",
-    fontSize: 20,
-  },
-  timeblock: {
-    backgroundColor: "#0f4c5c",
-    alignItems: "center",
-    maxHeight: 60,
-    margin: 10,
-    justifyContent: "center",
-    borderRadius: 10,
-  },
   session: {
     flex: 1,
     alignItems: "center",
@@ -265,29 +252,5 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  time_scroll_container: {
-    borderRadius: 30,
-    maxWidth: 30,
-    margin: 10,
-    marginLeft: 0,
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
-    shadowColor: "white",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: "rgba(255, 255, 255,0.2)",
-  },
-  time_scroll_text: {
-    color: "white",
-    fontSize: 10,
-    textAlign: "center",
-  },
+  }
 });

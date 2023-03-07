@@ -1,8 +1,7 @@
 {
   "expo": {
     "slug": "my-app",
-    "name": "my-app",
-    "sdkVersion": "47.0.0"
+    "name": "my-app"
   },
   "name": "my-app"
 }

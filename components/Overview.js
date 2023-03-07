@@ -1,9 +1,38 @@
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import CountDown from "react-native-countdown-component";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function Overview() {
+export default function Overview(props) {
+
+  //if props is not null, then set the date object to the date passed in from the props
+  //if props is null, then set the date object to the date of the event
+  const date_object = props.date
+    ? new Date(props.date)
+    : new Date("March 25, 2023 09:00:00");
+  
+  // a function that gets the seconds until the event starts for the countdown
+  const getSecondsUntilEvent = (date) => {
+    const now = new Date();
+    const difference = date.getTime() - now.getTime();
+    return Math.floor(difference / 1000);
+  };
+
+  // a on press function that will open the registration page in a browser
+  const onPress = () => {
+    Linking.openURL(
+      "https://www.eventbrite.com/e/atlanta-cloud-conference-2023-registration-445303012297"
+    );
+  };
+
   return (
     <LinearGradient
       Background
@@ -22,13 +51,13 @@ export default function Overview() {
           March 25th, 2023
         </Text>
         <CountDown
-          until={100000}
+          until={getSecondsUntilEvent(date_object)}
           size={30}
           digitStyle={{ backgroundColor: "transparent" }}
           digitTxtStyle={{ color: "#00F2F2" }}
           timeToShow={["D", "H", "M", "S"]}
           timeLabels={{ d: "Days", h: "Hours", m: "Minutes", s: "Seconds" }}
-          timeLabelStyle={{ color: "grey" }}
+          timeLabelStyle={{ color: "white" }}
         />
       </View>
 
@@ -41,7 +70,10 @@ export default function Overview() {
       {/* Register Button and Price Increase Text */}
 
       <View style={styles.bottomcontainer}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center" }}
+          onPress={() => onPress()}
+        >
           <FontAwesome5 name="ticket-alt" size={30} color="#00FFFF" />
           <Text
             style={{
@@ -53,7 +85,7 @@ export default function Overview() {
           >
             Register
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={{ width: 270 }}>
           <Text
             style={{
@@ -65,8 +97,7 @@ export default function Overview() {
               paddingTop: 25,
             }}
           >
-            Price increases to $15.00 on Feb 12, 2023, and again to $20.00 on
-            Mar 11th. 2023.
+            Price increases to $20.00 on Mar 11th. 2023.
           </Text>
         </View>
       </View>

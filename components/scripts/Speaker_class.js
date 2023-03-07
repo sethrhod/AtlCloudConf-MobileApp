@@ -11,6 +11,5 @@ export default class Speaker {
     this.profilePicture = speaker.profilePicture;
     this.sessions = speaker.sessions;
     this.links = speaker.links;
-    this.twitter = speaker.twitter;
   }
 }

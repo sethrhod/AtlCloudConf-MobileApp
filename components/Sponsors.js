@@ -10,8 +10,6 @@ import {
   TouchableHighlight,
   Linking,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SubItem = (props) => (
   <TouchableHighlight onPress={() => Linking.openURL(props.sponsors.url)}>
@@ -21,20 +19,47 @@ const SubItem = (props) => (
   </TouchableHighlight>
 );
 
+const sponsor_level_color = (sponsor_level) => {
+  switch (sponsor_level) {
+    case "Platinum":
+      return "#E5E4E2";
+    case "Gold":
+      return "#FFD700";
+    default:
+      return "#FFFFFF";
+  }
+};
+
 const Item = (props) => (
   <View style={styles.sponsor_level_container}>
-    <Text style={styles.sponsor_level}>{props.item.sponsor_level}</Text>
+    <Text
+      style={[
+        styles.sponsor_level,
+        {
+          color: sponsor_level_color(props.item.sponsor_level),
+          shadowColor: sponsor_level_color(props.item.sponsor_level),
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.5,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+      ]}
+    >
+      {props.item.sponsor_level}
+    </Text>
     <FlatList
       data={props.item.sponsors}
       renderItem={({ item }) => <SubItem sponsors={item} />}
-      contentContainerStyle={{ alignItems: "stretch", }}
+      contentContainerStyle={{ alignItems: "stretch" }}
       style={{ width: "100%" }}
     />
   </View>
 );
 
-function List() {
-
+export default function Sponsors() {
   const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
@@ -54,20 +79,6 @@ function List() {
         style={{ width: "100%" }}
       />
     </SafeAreaView>
-  )
-}
-
-export default function Sponsors() {
-  return (
-    <LinearGradient
-      Background
-      Linear
-      Gradient
-      colors={["rgba(0,0,0,1)", "rgba(0,47,63,1)"]}
-      style={styles.container}
-    >
-      <List />
-    </LinearGradient>
   );
 }
 
@@ -82,7 +93,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: StatusBar.currentHeight || 0,
   },
-  sponsor_level_container : {
+  sponsor_level_container: {
     alignItems: "center",
     width: "90%",
     padding: 5,
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   logo: {
-    width: '100%',
+    width: "100%",
     height: 100,
     resizeMode: "contain",
   },
