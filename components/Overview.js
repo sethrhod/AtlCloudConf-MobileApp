@@ -12,11 +12,13 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function Overview(props) {
 
+  const CustomData = require("../custom-data.json");
+
   //if props is not null, then set the date object to the date passed in from the props
   //if props is null, then set the date object to the date of the event
   const date_object = props.date
     ? new Date(props.date)
-    : new Date("March 25, 2023 09:00:00");
+    : new Date(CustomData.eventDate);
   
   // a function that gets the seconds until the event starts for the countdown
   const getSecondsUntilEvent = (date) => {
@@ -27,9 +29,7 @@ export default function Overview(props) {
 
   // a on press function that will open the registration page in a browser
   const onPress = () => {
-    Linking.openURL(
-      "https://www.eventbrite.com/e/atlanta-cloud-conference-2023-registration-445303012297"
-    );
+    Linking.openURL(CustomData.registrationURL);
   };
 
   return (
