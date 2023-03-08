@@ -18,6 +18,8 @@ import SessionizeContext from "./SessionizeContext.js";
 export default function App() {
   const Drawer = createDrawerNavigator();
 
+  const CustomData = require("./custom-data.json");
+
   //speaker objects
   const [speakers, setSpeakers] = useState(null);
   //session objects containing assigned speaker objects
@@ -45,7 +47,7 @@ export default function App() {
 
   // fetching speakers, creating objects from those speakers, then passing them in to the fetchsessions function that creates session objects with the proper speakers objects
   useEffect(() => {
-    fetch("https://sessionize.com/api/v2/curiktb3/view/Speakers")
+    fetch(CustomData.speakersURL)
       .then((response) => response.json())
       .then((data) => {
         let all_speakers = [];
@@ -59,7 +61,7 @@ export default function App() {
   }, []);
 
   const fetchSessions = (all_speakers) => {
-    fetch("https://sessionize.com/api/v2/curiktb3/view/Sessions")
+    fetch(CustomData.sessionsURL)
       .then((response) => response.json())
       .then((data) => {
         let classinstance = new Sessions(data[0], all_speakers);
