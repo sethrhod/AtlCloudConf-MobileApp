@@ -68,13 +68,11 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 20,
-    color: "#DBE9EE"
+    marginTop: 20
   },
   p: {
     fontSize: 16,
     margin: 20,
-    textAlign: "left",
-    color: "#C0D6DF"
+    textAlign: "left"
   },
 });

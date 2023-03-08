@@ -12,8 +12,12 @@ import SessionizeContext from "../SessionizeContext.js";
 import Session from "./Session.js";
 import constructSectionListData from "./scripts/constructScheduleSectionListData.js";
 import getNewTime from "./scripts/getNewTime.js";
+import { useTheme } from "@react-navigation/native";
 
 export default function Schedule() {
+
+  const { colors } = useTheme();
+
   const sectionListRef = React.useRef(null);
 
   const { sessions } = useContext(SessionizeContext);
@@ -47,12 +51,12 @@ export default function Schedule() {
           />
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <View style={styles.timeblock}>
+          <View style={[styles.timeblock, {backgroundColor: colors.primary}]}>
             <Text style={styles.timeblock_text}>{title}</Text>
           </View>
         )}
       />
-      <View style={styles.time_scroll_container}>
+      <View style={[styles.time_scroll_container, {shadowColor: colors.primary}]}>
         <TimeScroll
           sectionListData={constructSectionListData(sessions, bookmarks)}
           sectionListRef={sectionListRef}
@@ -63,6 +67,9 @@ export default function Schedule() {
 };
 
 function TimeScroll(props) {
+
+  const { colors } = useTheme();
+
   return props.sectionListData.map((time, index) => (
     <View style={styles.time_scroll}>
       <TouchableOpacity
@@ -76,7 +83,7 @@ function TimeScroll(props) {
           });
         }}
       >
-        <Text style={styles.time_scroll_text}>{time.title}</Text>
+        <Text style={[styles.time_scroll_text, {color: colors.text}]}>{time.title}</Text>
       </TouchableOpacity>
     </View>
   ));
@@ -131,8 +138,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black",
-    shadowColor: "white",
     shadowOffset: {
       width: 0,
       height: 0,
@@ -140,10 +145,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 10,
     elevation: 5,
-    backgroundColor: "rgba(255, 255, 255,0.2)",
   },
   time_scroll_text: {
-    color: "white",
     fontSize: 10,
     textAlign: "center",
   },

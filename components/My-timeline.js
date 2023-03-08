@@ -2,11 +2,15 @@ import React, { useContext } from "react";
 import { SectionList, View, Button, RefreshControl, SafeAreaView } from "react-native";
 import { StyleSheet, Text } from "react-native";
 import SessionizeContext from "../SessionizeContext.js";
-import { getNewTime } from "./Schedule.js";
+import getNewTime from "./scripts/getNewTime.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Session from "./Session.js";
+import { useTheme } from "@react-navigation/native";
 
 export default function MyTimeline() {
+
+  const { colors } = useTheme();
+
   const { bookmarks } = useContext(SessionizeContext);
   const { setBookmarks } = useContext(SessionizeContext);
   const { sessions } = useContext(SessionizeContext);
@@ -69,7 +73,7 @@ export default function MyTimeline() {
       </View>
     ) : (
       <SafeAreaView style={styles.container}>
-        <Button title="Clear My Timeline" onPress={() => clearAll()} />
+        <Button color={colors.primary} title="Clear My Timeline" onPress={() => clearAll()} />
 
         <SectionList
           sections={constructSectionListData(bookmarks)}
@@ -90,7 +94,7 @@ export default function MyTimeline() {
             </View>
           )}
           renderSectionHeader={({ section: { title } }) => (
-            <View style={styles.timeblock}>
+            <View style={[styles.timeblock, {backgroundColor: colors.primary}]}>
               <Text style={styles.timeblock_text}>{title}</Text>
             </View>
           )}
@@ -111,7 +115,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   timeblock: {
-    backgroundColor: "#0f4c5c",
     alignItems: "center",
     maxHeight: 60,
     margin: 10,

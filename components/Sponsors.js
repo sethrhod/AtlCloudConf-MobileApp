@@ -37,7 +37,7 @@ const Item = (props) => (
         styles.sponsor_level,
         {
           color: sponsor_level_color(props.item.sponsor_level),
-          shadowColor: sponsor_level_color(props.item.sponsor_level),
+          shadowColor: "black",
           shadowOffset: {
             width: 0,
             height: 2,

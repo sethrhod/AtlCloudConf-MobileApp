@@ -122,13 +122,13 @@ export default function App() {
 
   return (
     <SessionizeContext.Provider value={value}>
-      <NavigationContainer theme={MyTheme}>
-        <Drawer.Navigator screenOptions={{ headerTintColor: "#DBE9EE" }}>
+      <NavigationContainer theme={DevTheme}>
+        <Drawer.Navigator screenOptions={{ headerTintColor: "black" }}>
           <Drawer.Screen name="Overview" component={Overview} />
-          <Drawer.Screen name="Speakers" component={Speakers} />
+          {/* <Drawer.Screen name="Speakers" component={Speakers} />
           <Drawer.Screen name="Sponsors" component={Sponsors} />
           <Drawer.Screen name="Schedule" component={Schedule} />
-          <Drawer.Screen name="My Timeline" component={MyTimeline} />
+          <Drawer.Screen name="My Timeline" component={MyTimeline} /> */}
           <Drawer.Screen name="Code of Conduct" component={CodeOfConduct} />
         </Drawer.Navigator>
       </NavigationContainer>
@@ -136,8 +136,8 @@ export default function App() {
   );
 }
 
-const MyTheme = {
-  dark: true,
+const CloudTheme = {
+  dark: false,
   colors: {
     primary: "#DBE9EE",
     background: "#166088",
@@ -147,6 +147,21 @@ const MyTheme = {
     notification: "#00FFFF",
   },
 };
+
+const DevTheme = {
+  dark: false,
+  colors: {
+    primary: "#5C00A3",
+    secondary: "#B85CFF",
+    tertiary: "#917878",
+    background: "#E4DDDD",
+    card: "#E4DDDD",
+    border: "#E4DDDD",
+    text: "black",
+    notification: "#8B00F5",
+  },
+};
+
 
 const styles = StyleSheet.create({
   container: {

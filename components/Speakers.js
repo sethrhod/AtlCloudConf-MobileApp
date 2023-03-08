@@ -2,6 +2,7 @@ import { StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, Image, Linki
 import React, { useContext } from 'react';
 import { FontAwesome5 } from "@expo/vector-icons";
 import SessionizeContext from "../SessionizeContext";
+import { useTheme } from "@react-navigation/native";
 
 const Item = (props) => (
   <View style={styles.item}>
@@ -13,7 +14,7 @@ const Item = (props) => (
     {/*Name and links*/}
 
     <View style={{ maxWidth: 130, alignItems: 'center' }}>
-      <Text style={styles.name}>{props.fullName}</Text>
+      <Text style={[styles.name, { color: props.colors.text }]}>{props.fullName}</Text>
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
         {props.links.map((link, index) => 
           {var title = link.title;
@@ -22,7 +23,7 @@ const Item = (props) => (
             return (
               <View key={index} style={{ justifyContent: 'center', padding: 5 }}>
                 <TouchableOpacity onPress={() => Linking.openURL(link.url)}>
-                  <FontAwesome5 name={title.toLowerCase()} size={20} color="#166088" item_container/>
+                  <FontAwesome5 name={title.toLowerCase()} size={20} color={props.colors.primary} item_container/>
                 </TouchableOpacity>
               </View>
           )}
@@ -33,12 +34,14 @@ const Item = (props) => (
     {/*bio*/}
 
     <View style={{ width: 120 }}>
-      <Text style={styles.bio}>{props.tagLine}</Text>
+      <Text style={[styles.bio, {color: props.colors.text}]}>{props.tagLine}</Text>
     </View>
   </View>
 );
 
 export default function Speakers() {
+
+  const { colors } = useTheme();
 
   const {speakers} = useContext(SessionizeContext);
 
@@ -47,7 +50,7 @@ export default function Speakers() {
       <SafeAreaView style={styles.item_container}>
         <FlatList
           data={speakers}
-          renderItem={({ item }) => <Item fullName={item.fullName} uri={item.profilePicture} tagLine={item.tagLine} links={item.links} />}
+          renderItem={({ item }) => <Item fullName={item.fullName} uri={item.profilePicture} tagLine={item.tagLine} links={item.links} colors={colors}/>}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{alignItems: 'stretch'}}
           style={{ width: '100%' }}
@@ -58,6 +61,7 @@ export default function Speakers() {
 }
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     alignItems: "center",
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 15,
     width: '90%',
-    backgroundColor: '#DBE9EE',
+    backgroundColor: '#f2f2f2',
     padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -82,19 +86,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flexWrap: 'wrap',
     textAlign: 'center',
-    color: '#166088'
   },
   bio: {
     fontSize: 12,
-    color: '#166088'
   },
   logo: {
     width: 85,
     height: 85,
     borderRadius: 50,
   },
-  link: {
-    color: '#166088'
-  }
 });
 

@@ -9,16 +9,20 @@ import {
 } from "react-native";
 import CountDown from "react-native-countdown-component";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "@react-navigation/native";
 
 export default function Overview(props) {
+
+  const { colors } = useTheme();
+
+  const customData = require('../custom-data.json')
 
   //if props is not null, then set the date object to the date passed in from the props
   //if props is null, then set the date object to the date of the event
   const date_object = props.date
     ? new Date(props.date)
-    : new Date("March 25, 2023 09:00:00");
-  
+    : new Date(customData.eventDate);
+
   // a function that gets the seconds until the event starts for the countdown
   const getSecondsUntilEvent = (date) => {
     const now = new Date();
@@ -28,43 +32,31 @@ export default function Overview(props) {
 
   // a on press function that will open the registration page in a browser
   const onPress = () => {
-    Linking.openURL(
-      "https://www.eventbrite.com/e/atlanta-cloud-conference-2023-registration-445303012297"
-    );
+    Linking.openURL(customData.registrationLink);
   };
 
   return (
-    <LinearGradient
-      Background
-      Linear
-      Gradient
-      colors={["rgba(0,0,0,1)", "rgb(0, 117, 242, 1)"]}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {/* Event Title and Countdown */}
 
       <View style={styles.topcontainer}>
-        <Text style={{ color: "white", fontSize: 35, fontWeight: "bold" }}>
-          Atl Cloud Conf
+        <Text style={{ color: colors.text, fontSize: 35, fontWeight: "bold" }}>
+          Atlanta Developers' Conference 2023
         </Text>
-        <Text style={{ color: "white", fontSize: 15, fontWeight: "semi-bold" }}>
-          March 25th, 2023
+        <Text
+          style={{ color: colors.text, fontSize: 15, fontWeight: "semi-bold" }}
+        >
+          TBA
         </Text>
         <CountDown
           until={getSecondsUntilEvent(date_object)}
           size={30}
           digitStyle={{ backgroundColor: "transparent" }}
-          digitTxtStyle={{ color: "#00F2F2" }}
+          digitTxtStyle={{ color: colors.primary }}
           timeToShow={["D", "H", "M", "S"]}
           timeLabels={{ d: "Days", h: "Hours", m: "Minutes", s: "Seconds" }}
-          timeLabelStyle={{ color: "white" }}
+          timeLabelStyle={{ color: colors.primary }}
         />
-      </View>
-
-      {/* Rocket */}
-
-      <View style={styles.midcontainer}>
-        <Image resizeMode="center" source={require("../assets/rocket.png")} />
       </View>
 
       {/* Register Button and Price Increase Text */}
@@ -74,10 +66,10 @@ export default function Overview(props) {
           style={{ flexDirection: "row", alignItems: "center" }}
           onPress={() => onPress()}
         >
-          <FontAwesome5 name="ticket-alt" size={30} color="#00FFFF" />
+          <FontAwesome5 name="ticket-alt" size={30} color={colors.notification} />
           <Text
             style={{
-              color: "white",
+              color: colors.text,
               fontSize: 27,
               fontWeight: "bold",
               padding: 10,
@@ -89,7 +81,7 @@ export default function Overview(props) {
         <View style={{ width: 270 }}>
           <Text
             style={{
-              color: "#C4C4C4",
+              color: colors.text,
               fontSize: 15,
               fontWeight: "semi-bold",
               lineHeight: 16,
@@ -97,15 +89,20 @@ export default function Overview(props) {
               paddingTop: 25,
             }}
           >
-            Price increases to $20.00 on Mar 11th. 2023.
+            {/* Price increases to $20.00 on Mar 11th. 2023. */}
           </Text>
         </View>
       </View>
-      <Image
-        style={styles.image}
-        source={require("../assets/bottom-image.png")}
-      />
-    </LinearGradient>
+
+      {/* Logo */}
+
+      <View style={styles.midcontainer}>
+        <Image
+          resizeMode="center"
+          source={require("../assets/atldevcon-logo.png")}
+        />
+      </View>
+    </View>
   );
 }
 

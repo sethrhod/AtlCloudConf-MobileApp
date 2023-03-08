@@ -4,8 +4,13 @@ import SessionizeContext from "../SessionizeContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useTheme } from "@react-navigation/native";
+import { color } from "react-native-reanimated";
 
 export default function Session(props) {
+
+  const { colors } = useTheme();
+
   // the state for the list of bookmarks
   const {bookmarks} = useContext(SessionizeContext);
   const {setBookmarks} = useContext(SessionizeContext);
@@ -102,7 +107,7 @@ export default function Session(props) {
           flex: 1,
           flexDirection: "row",
           borderRadius: 10,
-          backgroundColor: "#C0D6DF",
+          backgroundColor: colors.tertiary,
           margin: 10,
           padding: 10,
         }}
@@ -111,7 +116,7 @@ export default function Session(props) {
         <Text
           style={{
             flex: 1,
-            color: "#4A6FA5",
+            color: colors.text,
             fontWeight: "600",
             fontSize: 25,
           }}
@@ -119,15 +124,15 @@ export default function Session(props) {
           Add to Timeline
         </Text>
         {props.session.bookmarked ? (
-          <Icon name="bookmark" color={"#4A6FA5"} size={30} solid />
+          <Icon name="bookmark" color={colors.text} size={30} solid />
         ) : (
-          <Icon name="bookmark" color={"#4A6FA5"} size={30} />
+          <Icon name="bookmark" color={colors.text} size={30} />
         )}
       </Pressable>
     );
   };
 
-  var bg = props.session.bookmarked ? "#00F2F2" : "#DBE9EE";
+  var bg = props.session.bookmarked ? colors.tertiary : "white";
 
   return (
     <Swipeable
@@ -194,7 +199,7 @@ export default function Session(props) {
                 alignItems: "center",
               }}
             >
-              <Text style={[styles.main_room]}>{props.session.room}</Text>
+              <Text>{props.session.room}</Text>
             </View>
           )}
         </View>
@@ -220,21 +225,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
-    color: '#166088'
   },
   name: {
     fontSize: 12,
     textAlign: "center",
-    color: "#166088",
   },
   speaker_room: {
-    color: "#166088",
     textAlign: "center",
     fontSize: 15,
     fontWeight: "semi-bold",
-  },
-  main_room: {
-    color: "#166088",
   },
   logo: {
     width: 25,
@@ -245,7 +244,6 @@ const styles = StyleSheet.create({
   times: {
     textAlign: "center",
     fontSize: 12,
-    color: "#166088",
   },
   time_scroll: {
     flex: 1,
