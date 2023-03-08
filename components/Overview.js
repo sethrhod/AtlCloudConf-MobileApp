@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import CountDown from "react-native-countdown-component";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function Overview(props) {
 
@@ -34,13 +33,7 @@ export default function Overview(props) {
   };
 
   return (
-    <LinearGradient
-      Background
-      Linear
-      Gradient
-      colors={["rgba(0,0,0,1)", "rgb(0, 117, 242, 1)"]}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {/* Event Title and Countdown */}
 
       <View style={styles.topcontainer}>
@@ -105,7 +98,7 @@ export default function Overview(props) {
         style={styles.image}
         source={require("../assets/bottom-image.png")}
       />
-    </LinearGradient>
+    </View>
   );
 }
 

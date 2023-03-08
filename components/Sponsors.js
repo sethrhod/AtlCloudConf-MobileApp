@@ -90,8 +90,7 @@ const styles = StyleSheet.create({
   },
   item_container: {
     flex: 1,
-    width: "100%",
-    marginTop: StatusBar.currentHeight || 0,
+    width: "100%"
   },
   sponsor_level_container: {
     alignItems: "center",

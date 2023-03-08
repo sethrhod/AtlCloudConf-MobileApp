@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { SectionList, View, Button, RefreshControl, SafeAreaView } from "react-native";
 import { StyleSheet, Text } from "react-native";
 import SessionizeContext from "../SessionizeContext.js";
-import { getNewTime } from "./Schedule.js";
+import getNewTime from "./scripts/getNewTime.js"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Session from "./Session.js";
 
