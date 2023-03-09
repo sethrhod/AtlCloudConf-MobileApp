@@ -142,6 +142,8 @@ const MyTheme = {
   dark: true,
   colors: {
     primary: "#DBE9EE",
+    secondary: "#C4C4C4",
+    tertiary: "#4A6FA5",
     background: "#166088",
     card: "#166088",
     text: "white",

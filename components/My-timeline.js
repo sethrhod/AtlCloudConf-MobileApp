@@ -5,8 +5,11 @@ import SessionizeContext from "../SessionizeContext.js";
 import getNewTime from "./scripts/getNewTime.js"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Session from "./Session.js";
+import { useTheme } from "@react-navigation/native";
 
 export default function MyTimeline() {
+
+  const { colors } = useTheme();
   const { bookmarks } = useContext(SessionizeContext);
   const { setBookmarks } = useContext(SessionizeContext);
   const { sessions } = useContext(SessionizeContext);
@@ -63,7 +66,7 @@ export default function MyTimeline() {
   const conditionalRender =
     bookmarks.length === 0 ? (
       <View style={{ flex: 0.8, justifyContent: "center" }}>
-        <Text style={{ color: "white", fontSize: 40, textAlign: "center" }}>
+        <Text style={{ color: colors.text, fontSize: 40, textAlign: "center" }}>
           No Sessions Added
         </Text>
       </View>
@@ -90,8 +93,8 @@ export default function MyTimeline() {
             </View>
           )}
           renderSectionHeader={({ section: { title } }) => (
-            <View style={styles.timeblock}>
-              <Text style={styles.timeblock_text}>{title}</Text>
+            <View style={[styles.timeblock, {backgroundColor: colors.tertiary}]}>
+              <Text style={[styles.timeblock_text, {color: colors.text}]}>{title}</Text>
             </View>
           )}
         />
@@ -107,78 +110,13 @@ const styles = StyleSheet.create({
   },
   timeblock_text: {
     padding: 10,
-    color: "white",
     fontSize: 20,
   },
   timeblock: {
-    backgroundColor: "#0f4c5c",
     alignItems: "center",
     maxHeight: 60,
     margin: 10,
     justifyContent: "center",
     borderRadius: 10,
-  },
-  session: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-    borderRadius: 10,
-    margin: 10,
-  },
-  title: {
-    textAlign: "center",
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  name: {
-    fontSize: 12,
-    textAlign: "center",
-  },
-  speaker_room: {
-    color: "black",
-    textAlign: "center",
-    fontSize: 15,
-    fontWeight: "semi-bold",
-  },
-  logo: {
-    width: 25,
-    height: 25,
-    borderRadius: 35,
-    margin: 5,
-  },
-  times: {
-    textAlign: "center",
-    fontSize: 12,
-  },
-  time_scroll: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  time_scroll_container: {
-    borderRadius: 30,
-    maxWidth: 30,
-    margin: 10,
-    marginLeft: 0,
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
-    shadowColor: "white",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: "rgba(255, 255, 255,0.2)",
-  },
-  time_scroll_text: {
-    color: "white",
-    fontSize: 10,
-    textAlign: "center",
-  },
+  }
 });

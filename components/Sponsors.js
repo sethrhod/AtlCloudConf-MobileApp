@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  StatusBar,
   Text,
   TouchableHighlight,
   Linking,

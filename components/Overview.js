@@ -9,8 +9,11 @@ import {
 } from "react-native";
 import CountDown from "react-native-countdown-component";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 
 export default function Overview(props) {
+
+  const { colors } = useTheme();
 
   const CustomData = require("../custom-data.json");
 
@@ -37,20 +40,20 @@ export default function Overview(props) {
       {/* Event Title and Countdown */}
 
       <View style={styles.topcontainer}>
-        <Text style={{ color: "white", fontSize: 35, fontWeight: "bold" }}>
+        <Text style={{ color: colors.text, fontSize: 35, fontWeight: "bold" }}>
           Atl Cloud Conf
         </Text>
-        <Text style={{ color: "white", fontSize: 15, fontWeight: "semi-bold" }}>
+        <Text style={{ color: colors.text, fontSize: 15, fontWeight: "semi-bold" }}>
           March 25th, 2023
         </Text>
         <CountDown
           until={getSecondsUntilEvent(date_object)}
           size={30}
           digitStyle={{ backgroundColor: "transparent" }}
-          digitTxtStyle={{ color: "#00F2F2" }}
+          digitTxtStyle={{ color: colors.notification }}
           timeToShow={["D", "H", "M", "S"]}
           timeLabels={{ d: "Days", h: "Hours", m: "Minutes", s: "Seconds" }}
-          timeLabelStyle={{ color: "white" }}
+          timeLabelStyle={{ color: colors.text }}
         />
       </View>
 
@@ -67,10 +70,10 @@ export default function Overview(props) {
           style={{ flexDirection: "row", alignItems: "center" }}
           onPress={() => onPress()}
         >
-          <FontAwesome5 name="ticket-alt" size={30} color="#00FFFF" />
+          <FontAwesome5 name="ticket-alt" size={30} color={colors.notification} />
           <Text
             style={{
-              color: "white",
+              color: colors.text,
               fontSize: 27,
               fontWeight: "bold",
               padding: 10,
@@ -82,7 +85,7 @@ export default function Overview(props) {
         <View style={{ width: 270 }}>
           <Text
             style={{
-              color: "#C4C4C4",
+              color: colors.secondary,
               fontSize: 15,
               fontWeight: "semi-bold",
               lineHeight: 16,

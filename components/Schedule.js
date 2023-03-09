@@ -12,8 +12,12 @@ import SessionizeContext from "../SessionizeContext.js";
 import Session from "./Session.js";
 import constructSectionListData from "./scripts/constructScheduleSectionListData.js";
 import getNewTime from "./scripts/getNewTime.js";
+import { useTheme } from "@react-navigation/native";
 
 export default function Schedule() {
+
+  const { colors } = useTheme();
+
   const sectionListRef = React.useRef(null);
 
   const { sessions } = useContext(SessionizeContext);
@@ -47,8 +51,8 @@ export default function Schedule() {
           />
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <View style={styles.timeblock}>
-            <Text style={styles.timeblock_text}>{title}</Text>
+          <View style={[styles.timeblock, {backgroundColor: colors.tertiary}]}>
+            <Text style={[styles.timeblock_text, {color: colors.text}]}>{title}</Text>
           </View>
         )}
       />
@@ -63,6 +67,9 @@ export default function Schedule() {
 };
 
 function TimeScroll(props) {
+
+  const { colors } = useTheme();
+
   return props.sectionListData.map((time, index) => (
     <View style={styles.time_scroll}>
       <TouchableOpacity
@@ -76,7 +83,7 @@ function TimeScroll(props) {
           });
         }}
       >
-        <Text style={styles.time_scroll_text}>{time.title}</Text>
+        <Text style={[styles.time_scroll_text, {color: colors.text}]}>{time.title}</Text>
       </TouchableOpacity>
     </View>
   ));
@@ -89,11 +96,9 @@ const styles = StyleSheet.create({
   },
   timeblock_text: {
     padding: 10,
-    color: "white",
     fontSize: 20,
   },
   timeblock: {
-    backgroundColor: "#4A6FA5",
     alignItems: "center",
     maxHeight: 60,
     margin: 10,
@@ -131,7 +136,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black",
     shadowColor: "white",
     shadowOffset: {
       width: 0,
@@ -139,11 +143,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.9,
     shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: "rgba(255, 255, 255,0.2)",
+    elevation: 5
   },
   time_scroll_text: {
-    color: "white",
     fontSize: 10,
     textAlign: "center",
   },
