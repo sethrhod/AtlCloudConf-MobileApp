@@ -30,46 +30,46 @@ export default function Feedback() {
   }, []);
 
   const [feedback, setFeedback] = React.useState([
-    {
-      sessionId: "443291",
-      rating: 5,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "443291",
-      rating: 5,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "443291",
-      rating: 5,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "412749",
-      rating: 4,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "439171",
-      rating: 3,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "439171",
-      rating: 3,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "437437",
-      rating: 2,
-      comment: "This was a great session!",
-    },
-    {
-      sessionId: "437437",
-      rating: 2,
-      comment: "This was a great session!",
-    },
+    // {
+    //   sessionId: "443291",
+    //   rating: 5,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "443291",
+    //   rating: 5,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "443291",
+    //   rating: 5,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "412749",
+    //   rating: 4,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "439171",
+    //   rating: 3,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "439171",
+    //   rating: 3,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "437437",
+    //   rating: 2,
+    //   comment: "This was a great session!",
+    // },
+    // {
+    //   sessionId: "437437",
+    //   rating: 2,
+    //   comment: "This was a great session!",
+    // },
   ]);
 
   // useEffect(() => {
@@ -93,7 +93,7 @@ export default function Feedback() {
 
   const Session = (props) => {
     return (
-      <View style={[styles.session, {backgroundColor: colors.primary}]}>
+      <View style={[styles.session, { backgroundColor: colors.primary }]}>
         <View style={styles.session_left}>
           <Text style={styles.session_time}>
             {getNewTime(props.session.startsAt)}-{" "}
@@ -101,22 +101,24 @@ export default function Feedback() {
           </Text>
           <Text style={styles.session_title}>{props.session.title}</Text>
           <View style={[styles.session_right]}>
-          <View style={styles.session_speaker_container}>
-            {props.session.speakers.map((speaker, index) => {
-              return (
-                <View key={index} style={styles.session_speaker_container}>
-                  <Image
-                    key={index}
-                    style={styles.logo}
-                    source={{ uri: speaker.profilePicture }}
-                  />
-                  <Text style={styles.session_speaker}>{speaker.fullName}</Text>
-                </View>
-              );
-            })}
+            <View style={styles.session_speaker_container}>
+              {props.session.speakers.map((speaker, index) => {
+                return (
+                  <View key={index} style={styles.session_speaker_container}>
+                    <Image
+                      key={index}
+                      style={styles.logo}
+                      source={{ uri: speaker.profilePicture }}
+                    />
+                    <Text style={styles.session_speaker}>
+                      {speaker.fullName}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            <Text style={styles.session_room}>{props.session.room}</Text>
           </View>
-          <Text style={styles.session_room}>{props.session.room}</Text>
-        </View>
         </View>
       </View>
     );
@@ -124,44 +126,56 @@ export default function Feedback() {
 
   const FeedbackItem = (props) => {
     return (
-      <View style={[styles.feedback, {backgroundColor: colors.secondary}]}>
-        <Text style={styles.feedback_text}>Rating: {props.session.feedback.rating}</Text>
-        <Text style={styles.feedback_text}>{props.session.feedback.comment}</Text>
+      <View style={[styles.feedback, { backgroundColor: colors.secondary }]}>
+        <Text style={styles.feedback_text}>
+          Rating: {props.session.feedback.rating}
+        </Text>
+        <Text style={styles.feedback_text}>
+          {props.session.feedback.comment}
+        </Text>
       </View>
     );
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <SectionList
-        sections={constructSectionListData(sessions, feedback)}
-        ref={sectionListRef}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View>
-            <Session session={item} />
-            {feedback.map((feedback, index) => {
-              if (feedback.sessionId === item.id) {
-                return <FeedbackItem key={index} session={item} />;
-              }
-            })}
-          </View>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <View
-            style={[styles.timeblock, { backgroundColor: colors.tertiary }]}
-          >
-            <Text style={[styles.timeblock_text, { color: colors.text }]}>
-              {title}
-            </Text>
-          </View>
-        )}
-      />
-    </SafeAreaView>
-  );
+  if (feedback.length === 0) {
+    return (
+      <SafeAreaView style={[styles.container, {justifyContent: 'center', alignItems: 'center'}]}>
+        <Text style={[styles.noFeedback, {color: colors.text}]}>No feedback yet!</Text>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <SectionList
+          sections={constructSectionListData(sessions, feedback)}
+          ref={sectionListRef}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View>
+              <Session session={item} />
+              {feedback.map((feedback, index) => {
+                if (feedback.sessionId === item.id) {
+                  return <FeedbackItem key={index} session={item} />;
+                }
+              })}
+            </View>
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <View
+              style={[styles.timeblock, { backgroundColor: colors.tertiary }]}
+            >
+              <Text style={[styles.timeblock_text, { color: colors.text }]}>
+                {title}
+              </Text>
+            </View>
+          )}
+        />
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -268,5 +282,10 @@ const styles = StyleSheet.create({
   },
   feedback_text: {
     fontSize: 10,
-  }
+  },
+  noFeedback: {
+    fontSize: 20,
+    textAlign: "center",
+    marginTop: 20,
+  },
 });
