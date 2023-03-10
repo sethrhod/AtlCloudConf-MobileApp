@@ -8,6 +8,7 @@ export default class Session {
     this.room = session.room;
     this.speakers_small_object = session.speakers;
     this.speakers = this.getSpeakers(all_speakers);
+    this.feedback = session.feedback;
     // the state that determines whether the session is bookmarked or not
     this.bookmarked = false;
   }

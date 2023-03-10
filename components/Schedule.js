@@ -3,13 +3,13 @@ import {
   Text,
   View,
   SectionList,
-  TouchableOpacity,
   RefreshControl,
   SafeAreaView,
 } from "react-native";
 import React, { useContext } from "react";
 import SessionizeContext from "../SessionizeContext.js";
 import Session from "./Session.js";
+import TimeScroll from "./TimeScroll.js";
 import constructSectionListData from "./scripts/constructScheduleSectionListData.js";
 import getNewTime from "./scripts/getNewTime.js";
 import { useTheme } from "@react-navigation/native";
@@ -66,29 +66,6 @@ export default function Schedule() {
   );
 };
 
-function TimeScroll(props) {
-
-  const { colors } = useTheme();
-
-  return props.sectionListData.map((time, index) => (
-    <View style={styles.time_scroll}>
-      <TouchableOpacity
-        onPress={() => {
-          props.sectionListRef.current.scrollToLocation({
-            animated: true,
-            itemIndex: 0,
-            sectionIndex: index,
-            viewOffset: 0,
-            viewPosition: 0,
-          });
-        }}
-      >
-        <Text style={[styles.time_scroll_text, {color: colors.text}]}>{time.title}</Text>
-      </TouchableOpacity>
-    </View>
-  ));
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -122,12 +99,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
   },
-  time_scroll: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   time_scroll_container: {
     borderRadius: 30,
     maxWidth: 30,
@@ -144,9 +115,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 10,
     elevation: 5
-  },
-  time_scroll_text: {
-    fontSize: 10,
-    textAlign: "center",
   },
 });

@@ -10,6 +10,7 @@ import Speakers from "./components/Speakers";
 import Sponsors from "./components/Sponsors";
 import Schedule from "./components/Schedule";
 import MyTimeline from "./components/My-timeline";
+import Feedback from "./components/Feedback";
 import CodeOfConduct from "./components/Code-of-Conduct";
 import Speaker from "./components/scripts/Speaker_class.js";
 import Sessions from "./components/scripts/Sessions_class.js";
@@ -131,6 +132,7 @@ export default function App() {
           <Drawer.Screen name="Sponsors" component={Sponsors} />
           <Drawer.Screen name="Schedule" component={Schedule} />
           <Drawer.Screen name="My Timeline" component={MyTimeline} />
+          <Drawer.Screen name="Feedback" component={Feedback} />
           <Drawer.Screen name="Code of Conduct" component={CodeOfConduct} />
         </Drawer.Navigator>
       </NavigationContainer>
